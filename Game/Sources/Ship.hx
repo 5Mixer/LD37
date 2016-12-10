@@ -8,17 +8,13 @@ typedef Tile = {
 	var id:Int;
 }
 
-class Level {
+class Ship {
 	var tileColours = [
 
 	];
 	public var tileInfo:Map<Int,Tile> = [
-		0 => { name: "ground", collide: false, id: 0},
-		1 => { name: "wall1", collide: true, id: 1},
-		2 => { name: "wall2", collide: true, id: 2},
-		3 => { name: "wall3", collide: true, id: 3},
-		4 => { name: "wall4", collide: true, id: 4},
-		5 => { name: "wall3", collide: true, id: 5}
+		1 => { name: "Wall", collide: false, id: 1},
+		2 => { name: "Floor", collide: true, id: 2}
 	];
 	var tiles = new Array<Int>();
 
@@ -26,10 +22,6 @@ class Level {
 	var height:Int;
 
 	public function new () {
-		var levelData = haxe.Json.parse(kha.Assets.blobs.Level_json.toString());
-		//tiles = levelData.tiles;
-		//width = levelData.width;
-		//height = levelData.height;
 
 		var data = haxe.xml.Parser.parse(kha.Assets.blobs.level1_tmx.toString());
 		var map = data.elementsNamed("map").next();
@@ -40,20 +32,27 @@ class Level {
 			tiles = [];
 			var layerTiles = layer.elementsNamed("data").next().elements();
 			for (tile in layerTiles){
-				tiles.push(Std.parseInt(tile.get("gid")) +1);
+				tiles.push(Std.parseInt(tile.get("gid")));
 			}
 			trace("Loaded data "+tiles);
 		}
 
 		if (tiles.length != width*height){
-//			throw "Odd level data - More tiles than width*height";
+			throw "Odd level data - More tiles than width*height";
 		}
+	}
+	public function getTileAt (x:Int,y:Int){
+		return tileInfo.get(tiles[(y*width)+x]);
+	}
+	public function setTileAt(x:Int,y:Int,id:Int){
+		trace('setting tile at $x $y to $id');
+		tiles[(y*width)+x] = id;
 	}
 	public function draw (g:kha.graphics2.Graphics){
 		for (y in 0...height){
 			for (x in 0...width){
 				var tileData = tileInfo.get(tiles[(y*width)+x]);
-				var sourcePos = { x: (width%tileData.id)*8, y:Math.floor(tileData.id/height)*8 };
+				var sourcePos = { x: (width%(tileData.id+1))*8, y:Math.floor((tileData.id+1)/height)*8 };
 				var destPos = { x: x*8, y: y*8 };
 				//trace(sourcePos + " " + destPos);
 

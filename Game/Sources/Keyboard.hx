@@ -2,7 +2,7 @@ package;
 
 import kha.Key;
 
-class Input {
+class Keyboard {
 	public var left: Bool;
 	public var right: Bool;
 	public var up: Bool;
@@ -10,8 +10,6 @@ class Input {
 
 	public function new() {
 		kha.input.Keyboard.get().notify(keyDown,keyUp);
-		//kha.input.Mouse.get().notify()
-
 	}
 
 	public function keyDown(char:Key,letter) {

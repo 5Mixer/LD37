@@ -5,23 +5,26 @@ import kha.Scheduler;
 import kha.System;
 
 class Project {
-	var level:Level;
+	var ship:Ship;
 	var camera:Camera;
 	var frame = 0;
 	var player:Player;
-	var input:Input;
+	var keyboard:Keyboard;
 
 	var lastTime:Float;
+	var mouse:Mouse;
 
 	public function new() {
 		System.notifyOnRender(render);
 		Scheduler.addTimeTask(update, 0, 1 / 60);
 
-		input = new Input();
 
-		level = new Level();
+		keyboard = new Keyboard();
 		camera = new Camera();
-		player = new Player(input);
+		mouse = new Mouse(camera);
+
+		ship = new Ship();
+		player = new Player(keyboard);
 
 		lastTime = Scheduler.time();
 		
@@ -48,9 +51,35 @@ class Project {
 
 
 		camera.transform(g);
-		level.draw(g);
+		ship.draw(g);
 		player.draw(g);
+
+		g.color = kha.Color.Cyan;
+		g.drawRect(Math.round((mouse.worldPos().x-4)/8)*8,Math.round((mouse.worldPos().y-4)/8)*8,8,8);
+		
+		g.color = kha.Color.White;
+
+		g.font = kha.Assets.fonts.pixel;
+		g.fontSize =8;
+
 		camera.restore(g);
+
+		var tileAtMouse = ship.getTileAt(Math.floor((mouse.worldPos().x)/8),Math.floor((mouse.worldPos().y)/8));
+		
+		if (tileAtMouse != null){
+			
+			g.drawString('Tile: ${tileAtMouse.name}',1,1);
+			
+		}
+		if (mouse.leftButton)
+			ship.setTileAt(Math.floor((mouse.worldPos().x)/8),Math.floor((mouse.worldPos().y)/8),1);
+
+		if (mouse.rightButton)
+			ship.setTileAt(Math.floor((mouse.worldPos().x)/8),Math.floor((mouse.worldPos().y)/8),2);
+
+
 		g.end();
+
+		
 	}
 }

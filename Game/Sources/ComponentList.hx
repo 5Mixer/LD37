@@ -8,6 +8,9 @@ class ComponentList {
 
 	}
 	public function callEvent (event:String,data:Dynamic){
+		if (!eventListeners.exists(event))
+			return;
+			
 		for (listener in eventListeners.get(event))
 			listener(data);
 	}
