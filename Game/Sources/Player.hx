@@ -3,7 +3,8 @@ package ;
 class Player {
 	public var pos:kha.math.Vector2;
 	var size:kha.math.Vector2;
-	var velocity:kha.math.Vector2;
+	public var speed = 1;
+	public var velocity:kha.math.Vector2;
 	var sprite:Sprite;
 	var keyboard:Keyboard;
 	var components = new ComponentList();
@@ -21,12 +22,8 @@ class Player {
 		sprite.draw(g,pos.x,pos.y);
 		components.callEvent("draw",g);
 	}
-	public function update (delta:Float) {
+	public function update (delta:Float,game:Game) {
 		var speed = 1;
-		if (keyboard.left) velocity.x = -speed;
-		if (keyboard.right) velocity.x = speed;
-		if (keyboard.up) velocity.y = -speed;
-		if (keyboard.down) velocity.y = speed;
 
 		pos.x += velocity.x;
 		pos.y += velocity.y;

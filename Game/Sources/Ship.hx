@@ -1,22 +1,11 @@
 package ;
 
-//Perhaps this should be loaded from a file.
-typedef Tile = {
-	var name:String;
-	var collide:Bool;
-	@:optional var oncollide:Void -> Void;
-	var id:Int;
-}
+import tiles.Tile;
+import tiles.StandardTile;
+import tiles.OccupiedSpaceTile;
 
 class Ship {
-	var tileColours = [
-
-	];
-	public var tileInfo:Map<Int,Tile> = [
-		1 => { name: "Wall", collide: false, id: 1},
-		2 => { name: "Floor", collide: true, id: 2}
-	];
-	var tiles = new Array<Int>();
+	var tiles = new Array<Tile>();
 
 	var width:Int;
 	var height:Int;
@@ -31,10 +20,12 @@ class Ship {
 		for (layer in layers){
 			tiles = [];
 			var layerTiles = layer.elementsNamed("data").next().elements();
+			var i = 0;
 			for (tile in layerTiles){
-				tiles.push(Std.parseInt(tile.get("gid")));
+				tiles.push(new StandardTile(new kha.math.Vector2i(i%width,Math.floor(i/width)),Std.parseInt(tile.get("gid"))));
+				i++;
 			}
-			trace("Loaded data "+tiles);
+			//trace("Loaded data "+tiles);
 		}
 
 		if (tiles.length != width*height){
@@ -42,21 +33,52 @@ class Ship {
 		}
 	}
 	public function getTileAt (x:Int,y:Int){
-		return tileInfo.get(tiles[(y*width)+x]);
+		return tiles[(y*width)+x];
 	}
-	public function setTileAt(x:Int,y:Int,id:Int){
-		trace('setting tile at $x $y to $id');
-		tiles[(y*width)+x] = id;
+	function setTileSimply(x,y,tile){
+		if (Std.is(getTileAt(x,y),OccupiedSpaceTile)){
+			var pos = cast(getTileAt(x,y),OccupiedSpaceTile).largerTile.pos;
+			//var pos = new kha.math.Vector2i(x,y).sub(cast(getTileAt(x,y),OccupiedSpaceTile).relativePosition);
+			var size = cast(getTileAt(x,y),OccupiedSpaceTile).largerTile.size;
+			for (y in 0...size.width){
+				for (x in 0...size.height){
+					tiles[((y+pos.y)*width)+(x+pos.x)] = null;
+				}
+			}
+		}
+		tiles[(y*width)+x] = tile;
+	}
+	public function setTileAt(x:Int,y:Int,tile:Tile){
+		if (x < 0 || y < 0 || x > width || y > height) return;
+
+		trace('setting tile at $x $y');
+		setTileSimply(x,y,tile);
+
+		if (tile.size.width > 1 || tile.size.height > 1){
+			for (empty_y in 0 ... tile.size.width){
+				for (empty_x in 0 ... tile.size.height){
+					if (empty_x == 0 && empty_y == 0) continue;
+					
+					setTileSimply(empty_x+x,y+empty_y,new tiles.OccupiedSpaceTile(new kha.math.Vector2i(empty_x+x,empty_y+y),cast tile,new kha.math.Vector2i(empty_x,empty_y)));
+				}
+			}
+		}
+	}
+	public function update(delta:Float,game:Game){
+		for (y in 0...height){
+			for (x in 0...width){
+				if (tiles[(y*width)+x] != null)
+					tiles[(y*width)+x].update(delta,game);
+				
+			}
+		}
 	}
 	public function draw (g:kha.graphics2.Graphics){
 		for (y in 0...height){
 			for (x in 0...width){
-				var tileData = tileInfo.get(tiles[(y*width)+x]);
-				var sourcePos = { x: (width%(tileData.id+1))*8, y:Math.floor((tileData.id+1)/height)*8 };
-				var destPos = { x: x*8, y: y*8 };
-				//trace(sourcePos + " " + destPos);
-
-				g.drawScaledSubImage(kha.Assets.images.Tileset,sourcePos.x,sourcePos.y,8,8,destPos.x,destPos.y,8,8);
+				if (tiles[(y*width)+x] != null)
+					tiles[(y*width)+x].render(g,x,y);
+				
 			}
 		}
 	}

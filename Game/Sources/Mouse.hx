@@ -4,9 +4,8 @@ class Mouse {
 	public var pos:kha.math.Vector2;
 	public var leftButton = false;
 	public var rightButton = false;
-	var cam:Camera;
-	public function new (camera:Camera){
-		cam = camera;
+	public function new (){
+		
 
 		pos = new kha.math.Vector2();
 		var mouse = kha.input.Mouse.get();
@@ -15,7 +14,7 @@ class Mouse {
 	function onDown (buttonCode:Int, x:Int,y:Int){
 		pos.x = x;
 		pos.y = y;
-		trace('Button $buttonCode down');
+		//trace('Button $buttonCode down');
 
 		if (buttonCode == 0)
 			leftButton = true;
@@ -26,11 +25,11 @@ class Mouse {
 	function onUp (buttonCode:Int,x:Int,y:Int){
 		pos.x = x;
 		pos.y = y;
-		trace('Button $buttonCode up');
+		//trace('Button $buttonCode up');
 
 		if (buttonCode == 0)
 			leftButton = false;
-			
+
 		if (buttonCode == 1)
 			rightButton = false;
 	}
@@ -42,7 +41,7 @@ class Mouse {
 		//Wheel be pos/negative depending on direction
 	}
 
-	public function worldPos (){
-		return cam.screenToWorld(pos);
+	public function worldPos (camera:Camera){
+		return camera.screenToWorld(pos);
 	}
 }
