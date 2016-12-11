@@ -38,7 +38,7 @@ class JetTile implements Tile {
 		g.translate((rotatePoint.x)*game.camera.scale.x,(rotatePoint.y)*game.camera.scale.y);
 		//g.translate(-jetOffsetUnrotated.x,-jetOffsetUnrotated.y);
 		//Do a rotate at this point.
-		g.translate(-12*8,-4*8);
+		g.translate(-12*game.camera.scale.x,-4*game.camera.scale.y);
 
 		//move forwards back etc for vibrations etc
 		g.rotate(rocketRotation * (Math.PI / 180),0,0);
@@ -48,15 +48,15 @@ class JetTile implements Tile {
 		//g.translate(-rotatePoint.x*game.camera.scale.x,-rotatePoint.y*game.camera.scale.x);
 		//Translate to place of ship
 		//g.translate(6*8,2*8);
-		g.translate(x*8*8,y*8*8);
-		g.translate(4*8,4*8);
+		g.translate(x*8*game.camera.scale.x,y*8*game.camera.scale.y);
+		g.translate(4*game.camera.scale.x,4*game.camera.scale.y);
 		
 		g.translate(-(rotatePoint.x)*game.camera.scale.x,-(rotatePoint.y)*game.camera.scale.y);
 		//g.drawRect(0,0,2,2);
 		//g.translate(jetOffset.x*8,jetOffset.y*8);
 		//Draw
 		//g.drawSubImage(tileset,x*8,y*8+8,3*8,8,3*8,8);
-		g.translate(8*8,8*8);
+		g.translate(8*game.camera.scale.x,8*game.camera.scale.y);
 		g.drawSubImage(tileset,0,0,3*8,8,3*8,8);
 		
 		g.popTransformation();

@@ -60,7 +60,7 @@ class Play extends State {
 		if (frame%30 == 0){
 		//	rounds[0].start();
 		}
-		if (false){
+		if (constructionMode){
 			camera.scale.x = 8;
 			camera.scale.y = 8;
 		}else{
