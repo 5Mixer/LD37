@@ -4,6 +4,9 @@ class Mouse {
 	public var pos:kha.math.Vector2;
 	public var leftButton = false;
 	public var rightButton = false;
+	public var wheel:Int = 0;
+
+	public var onWheelListeners = new Array<Int->Void>();
 	public function new (){
 		
 
@@ -39,6 +42,8 @@ class Mouse {
 	}
 	function onWheel (amount:Int){
 		//Wheel be pos/negative depending on direction
+		wheel = amount;
+		for (listener in onWheelListeners) listener(amount);
 	}
 
 	public function worldPos (camera:Camera){

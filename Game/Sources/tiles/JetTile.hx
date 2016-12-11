@@ -12,12 +12,12 @@ class JetTile implements Tile {
 	var jetOffsetUnrotated:kha.math.Vector2;
 
 	var tileset:kha.Image;
-	var cam:Camera;
 	var t = 0.0;
-	public function new (pos,cam){
+	var game:Game;
+	public function new (pos,game){
 		this.pos = pos;
 		tileset = kha.Assets.images.Tileset;
-		this.cam = cam;
+		this.game = game;
 
 		jetOffset = new kha.math.Vector2(1.5*8,1.5*8);
 		jetOffsetUnrotated = new kha.math.Vector2();
@@ -31,7 +31,7 @@ class JetTile implements Tile {
 		//g.pushTransformation(g.transformation);
 		//Render rocket
 		//Get the point of the world that the screen has at 0,0
-		var rotatePoint = cam.screenToWorld(new kha.math.Vector2(0,0));
+		var rotatePoint = game.camera.screenToWorld(new kha.math.Vector2(0,0));
 		//Store current world transform for later restoration after this madness
 		g.pushTransformation(g.transformation);
 		//Translate 'back' to the *screen* origin point, and center sprite
@@ -40,7 +40,7 @@ class JetTile implements Tile {
 		//Do a rotate at this point.
 		g.translate(0*8,-12*8);
 		//move forwards back etc for vibrations etc
-		g.rotate(rocketRotation * (Math.PI / 180),0,0);
+		g.rotate(rocketRotation * (Math.PI / 180),pos.x*8*8,pos.y*8*8);
 		//Translate back from 0,0 screen to 0,0 world
 		g.translate(-rotatePoint.x*8,-rotatePoint.y*8);
 		//Translate to place of ship

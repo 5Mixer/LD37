@@ -42,11 +42,14 @@ class Ship {
 			var size = cast(getTileAt(x,y),OccupiedSpaceTile).largerTile.size;
 			for (y in 0...size.width){
 				for (x in 0...size.height){
+					if (y == 0 && x == 0) continue;
 					tiles[((y+pos.y)*width)+(x+pos.x)] = null;
+					trace('Setting ${y+pos.y}, ${x+pos.x}` to null');
 				}
 			}
 		}
 		tiles[(y*width)+x] = tile;
+		tiles[(y*width)+x].pos = new kha.math.Vector2i(x,y);
 	}
 	public function setTileAt(x:Int,y:Int,tile:Tile){
 		if (x < 0 || y < 0 || x > width || y > height) return;
