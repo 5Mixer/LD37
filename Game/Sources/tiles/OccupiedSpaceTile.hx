@@ -22,6 +22,10 @@ class OccupiedSpaceTile implements Tile {
 	public function render (g:kha.graphics2.Graphics,x:Int,y:Int):Void{
 
 	}
+	public function renderInventoryItem (g:kha.graphics2.Graphics):Void {
+		g.color = kha.Color.Pink;
+		g.drawRect(0,0,size.width*8,size.height*8);
+	}
 	public function update (delta:Float,game:Game):Void{
 
 	}

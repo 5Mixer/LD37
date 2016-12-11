@@ -7,10 +7,13 @@ import tiles.OccupiedSpaceTile;
 class Ship {
 	var tiles = new Array<Tile>();
 
-	var width:Int;
-	var height:Int;
+	public var width:Int;
+	public var height:Int;
+
+	public var pos:kha.math.Vector2;
 
 	public function new () {
+		pos = new kha.math.Vector2();
 
 		var data = haxe.xml.Parser.parse(kha.Assets.blobs.level1_tmx.toString());
 		var map = data.elementsNamed("map").next();
@@ -36,16 +39,6 @@ class Ship {
 		return tiles[(y*width)+x];
 	}
 	function setTileSimply(x,y,tile){
-		/*if (Std.is(getTileAt(x,y),OccupiedSpaceTile)){
-			var pos = cast(getTileAt(x,y),OccupiedSpaceTile).largerTile.pos;
-			//var pos = new kha.math.Vector2i(x,y).sub(cast(getTileAt(x,y),OccupiedSpaceTile).relativePosition);
-			var size = cast(getTileAt(x,y),OccupiedSpaceTile).largerTile.size;
-			for (y in 0...size.width){
-				for (x in 0...size.height){
-					if (getTileAt (y+pos.y,x+pos.x) == null) return false;
-				}
-			}
-		}*/
 		tiles[(y*width)+x] = tile;
 		tiles[(y*width)+x].pos = new kha.math.Vector2i(x,y);
 	}

@@ -35,6 +35,11 @@ class StandardTile implements Tile {
 		g.drawScaledSubImage(kha.Assets.images.Tileset,sourcePos.x,sourcePos.y,8,8,destPos.x,destPos.y,8,8);
 		//g.drawString(id+"",x*8,y*8);
 	}
+	public function renderInventoryItem (g:kha.graphics2.Graphics):Void {
+		var sourcePos = { x: (id)*8, y:0 };
+		
+		g.drawSubImage(kha.Assets.images.Tileset,sourcePos.x,sourcePos.y,8,8,8,8);
+	}
 	public function update(delta,game){
 
 	}
