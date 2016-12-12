@@ -31,27 +31,27 @@ class Play extends State {
 		// inventory.push(tiles.StandardTile)
 		inventory.push(new tiles.JetTile(new kha.math.Vector2i(0,0),game));
 		inventory.push(new tiles.JetTile(new kha.math.Vector2i(0,0),game));
-		inventory.push(new tiles.JetTile(new kha.math.Vector2i(0,0),game));
+		inventory.push(new tiles.GunTile(new kha.math.Vector2i(0,0),game));
 		inventory.push(new tiles.StandardTile(new kha.math.Vector2i(),1));
 		inventory.push(new tiles.StandardTile(new kha.math.Vector2i(),1));
-		inventory.push(new tiles.StandardTile(new kha.math.Vector2i(),1));
-		inventory.push(new tiles.StandardTile(new kha.math.Vector2i(),1));
-		inventory.push(new tiles.StandardTile(new kha.math.Vector2i(),1));
-		inventory.push(new tiles.StandardTile(new kha.math.Vector2i(),2));
 
 		game.mouse.onWheelListeners.push(function (amount){
 			
 			inventorySelectedIndex += amount;
 			if (inventorySelectedIndex < 0) inventorySelectedIndex = inventory.length-1;
 			if (inventorySelectedIndex > inventory.length-1) inventorySelectedIndex = 0;
-			
-
+		
 		});
+		game.keyboard.onEscapeUp = switchMode;
 
 		rounds = [
 			new rounds.Round1(ship,game,enemies)
 		];
 		rounds[round].start();
+	}
+	function switchMode () {
+		trace("Switching construction mode");
+		constructionMode = !constructionMode;
 	}
 
 	override public function render(framebuffer:kha.Framebuffer){
@@ -74,10 +74,10 @@ class Play extends State {
 		
 	
 		camera.transform(g);
-		ship.draw(g);
+		ship.draw(g,game);
 
 		if (constructionMode)
-			player.draw(g);
+		//	player.draw(g);
 
 		for (enemy in enemies){
 			enemy.render(g,game);
@@ -166,11 +166,21 @@ class Play extends State {
 		game.mouse.update();
 	}
 	override public function update(delta:Float){
+		rounds[round].update(delta);
+		if (constructionMode){
+			if (game.keyboard.left) player.velocity.x = -player.speed;
+			if (game.keyboard.right) player.velocity.x = player.speed;
+			if (game.keyboard.up) player.velocity.y = -player.speed;
+			if (game.keyboard.down) player.velocity.y = player.speed;
+		}else{
+			if (game.keyboard.left) ship.engineAngle -= ship.turnSpeed;
+			if (game.keyboard.right) ship.engineAngle += ship.turnSpeed;
+			if (game.keyboard.up && ship.engineAngle < ship.maxEngineSpeed) { ship.engineSpeed ++; } else{
+				ship.engineSpeed = 0;
+			}
+			// if (game.keyboard.down) ship.engineAngle + = ship.turnSpeed;
+		}
 		
-		if (game.keyboard.left) player.velocity.x = -player.speed;
-		if (game.keyboard.right) player.velocity.x = player.speed;
-		if (game.keyboard.up) player.velocity.y = -player.speed;
-		if (game.keyboard.down) player.velocity.y = player.speed;
 
 		
 

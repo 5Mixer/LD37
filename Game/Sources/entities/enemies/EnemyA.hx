@@ -13,17 +13,18 @@ class EnemyA implements Enemy {
 		spriteMap = kha.Assets.images.Enemies;
 	}
 	public function render (g:kha.graphics2.Graphics,game:Game):Void {
-		g.pushTransformation(g.transformation);
+		//g.pushTransformation(g.transformation);
 
 		var rotatePoint = game.camera.screenToWorld(new kha.math.Vector2(0,0));
-		g.translate((rotatePoint.x)*game.camera.scale.x,(rotatePoint.y)*game.camera.scale.y);
-		g.translate(-this.size.x*game.camera.scale.x/2,-this.size.y*game.camera.scale.y/2);
-		//g.translate(-game.camera.pos.x,-game.camera.pos.y);
-		g.rotate(angle * (Math.PI/180),0,0);
-		g.translate(-(rotatePoint.x)*(game.camera.scale.x),-(rotatePoint.y)*(game.camera.scale.y));
-		g.translate(pos.x,pos.y);
-		g.drawSubImage(spriteMap, 0,0, 0,0,8*3,8*4);
-		g.popTransformation();
+		// g.translate((rotatePoint.x)*game.camera.scale.x,(rotatePoint.y)*game.camera.scale.y);
+		// g.translate(-this.size.x*game.camera.scale.x/2,-this.size.y*game.camera.scale.y/2);
+		// //g.translate(-game.camera.pos.x,-game.camera.pos.y);
+		// g.rotate(angle * (Math.PI/180),0,0);
+		// g.translate(-(rotatePoint.x)*(game.camera.scale.x),-(rotatePoint.y)*(game.camera.scale.y));
+		// g.translate(pos.x,pos.y);
+		// g.drawSubImage(spriteMap, 0,0, 0,0,8*3,8*4);
+		// g.popTransformation();
+		g.drawSubImage(spriteMap, pos.x,pos.y, 0,0,8*3,8*4);
 
 		angle++;
 	}

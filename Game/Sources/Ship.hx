@@ -3,14 +3,21 @@ package ;
 import tiles.Tile;
 import tiles.StandardTile;
 import tiles.OccupiedSpaceTile;
+import tiles.JetTile;
 
 class Ship {
 	var tiles = new Array<Tile>();
+	
+	public var bullets = new Array<entities.bullet.Bullet>();
 
 	public var width:Int;
 	public var height:Int;
 
 	public var pos:kha.math.Vector2;
+	public var engineAngle = 0;
+	public var maxEngineSpeed = 0;
+	public var engineSpeed = 0;
+	public var turnSpeed = 4;
 
 	public function new () {
 		pos = new kha.math.Vector2();
@@ -73,15 +80,36 @@ class Ship {
 		return true;
 	}
 	public function update(delta:Float,game:Game){
+		if (this.engineSpeed > 1)
+			this.engineSpeed -= 1;
+
+		
+		maxEngineSpeed = 0;
 		for (y in 0...height){
 			for (x in 0...width){
-				if (tiles[(y*width)+x] != null)
-					tiles[(y*width)+x].update(delta,game);
+				if (tiles[(y*width)+x] != null){
+					tiles[(y*width)+x].update(delta,game,this);
+					if (Std.is(tiles[y*width+x],JetTile)){
+						maxEngineSpeed += 5;
+					}
+				}
 				
 			}
 		}
+
+		
+		for (bullet in bullets)
+			bullet.update(delta);
+
+
+		this.pos.x += Math.cos(engineAngle * (Math.PI/180))*engineSpeed;
+		this.pos.y += Math.sin(engineAngle * (Math.PI/180))*engineSpeed;
+		
 	}
-	public function draw (g:kha.graphics2.Graphics){
+	public function draw (g:kha.graphics2.Graphics,game:Game){
+		g.pushTransformation(g.transformation);
+		g.translate(pos.x,pos.y);
+		
 		for (y in 0...height){
 			for (x in 0...width){
 				if (tiles[(y*width)+x] != null)
@@ -89,5 +117,11 @@ class Ship {
 				
 			}
 		}
+
+		for (bullet in bullets)
+			bullet.render(g);
+
+
+		g.popTransformation();
 	}
 }

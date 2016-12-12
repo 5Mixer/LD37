@@ -7,11 +7,14 @@ class Keyboard {
 	public var right: Bool;
 	public var up: Bool;
 	public var down: Bool;
+	public var onEscapeUp:Void->Void;
 
 	public function new() {
 		kha.input.Keyboard.get().notify(keyDown,keyUp);
 	}
-
+	public function update ()
+	{
+	}
 	public function keyDown(char:Key,letter) {
 		trace(char+"down");
 
@@ -39,6 +42,11 @@ class Keyboard {
 				up = false;
 			case DOWN:
 				down = false;
+			case ENTER:
+				if (onEscapeUp != null){
+					onEscapeUp();
+					trace("Escape");
+				} 
 			default:
 		}
 	}

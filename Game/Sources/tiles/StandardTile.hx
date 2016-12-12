@@ -40,7 +40,7 @@ class StandardTile implements Tile {
 		
 		g.drawSubImage(kha.Assets.images.Tileset,sourcePos.x,sourcePos.y,8,8,8,8);
 	}
-	public function update(delta,game){
+	public function update(delta,game,ship:Ship){
 
 	}
 }

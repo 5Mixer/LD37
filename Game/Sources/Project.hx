@@ -27,6 +27,8 @@ class Project {
 		currentState = new gameStates.Play(game,switchState);
 
 		lastTime = Scheduler.time();
+
+		//kha.audio1.Audio.play(kha.Assets.sounds.Intro);
 		
 	}
 
